@@ -74,11 +74,11 @@ class HomePage extends StatelessWidget {
                 ),
                 /////////////////////
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 ////////////////////
                 SizedBox(
-                  height: 160,
+                  height: 218,
                   child: ListView.separated(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
@@ -90,7 +90,13 @@ class HomePage extends StatelessWidget {
                     },
                     itemBuilder: (context, index) {
                       return GetBuilder<MainController>(builder: (_) {
-                        return HomeStoryWidget(
+                        return
+                            // Container(
+                            //   width: 110,
+                            //   height: 160,
+                            //   color: Colors.red,
+                            // );
+                            HomeStoryWidget(
                           mainController: mainController,
                           mediaType: MediaType.image,
                           // stories[index].media,

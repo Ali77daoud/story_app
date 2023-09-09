@@ -24,44 +24,58 @@ class HomeStoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 110,
-      height: 160,
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.bottomRight,
-            child: mediaType == MediaType.video
-                ? VideoThumbnailWidget(
-                    videoPath: url,
-                  )
-                : netWorkImg(mainController),
-          ),
-          /////////////////////
-          Align(
-            alignment: Alignment.bottomRight,
-            child: InkWell(
-                borderRadius: BorderRadius.circular(20),
-                onTap: onTap,
-                child: gradientContainer(mainController)),
-          ),
-          /////////////////////
+    return Center(
+      child: SizedBox(
+        width: mainController.isStoryImgExpanded(index) ? 150 : 110,
+        height: mainController.isStoryImgExpanded(index) ? 218 : 160,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.bottomRight,
+              child: mediaType == MediaType.video
+                  ? VideoThumbnailWidget(
+                      videoPath: url,
+                    )
+                  : netWorkImg(mainController),
+            ),
+            /////////////////////
+            Align(
+              alignment: Alignment.bottomRight,
+              child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: onTap,
+                  child: gradientContainer(mainController)),
+            ),
+            /////////////////////
 
-          ///////////////////
-          Align(
-            alignment: Alignment.topLeft,
-            child: profileStoryImg(),
-          )
-        ],
+            ///////////////////
+            Align(
+              alignment: Alignment.topLeft,
+              child: InkWell(
+                  onTap: mainController.isStoryImgExpanded(index)
+                      ? () {
+                          mainController.addIsProfileImgExpanded(index);
+                          print('/////////////////////////');
+                          mainController.isProfileImgExpandedList
+                              .forEach((element) {
+                            print(
+                                'index:${element.index} isEX: ${element.isExpanded}');
+                          });
+                        }
+                      : null,
+                  child: profileStoryImg(mainController)),
+            )
+          ],
+        ),
       ),
     );
   }
 
   Widget netWorkImg(MainController mainController) {
     return AnimatedContainer(
-      width: mainController.isExpanded(index) ? 140 : 100,
-      height: mainController.isExpanded(index) ? 208 : 150,
-      duration: const Duration(seconds: 1),
+      width: mainController.isStoryImgExpanded(index) ? 140 : 100,
+      height: mainController.isStoryImgExpanded(index) ? 208 : 150,
+      duration: const Duration(milliseconds: 0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: CachedNetworkImage(
@@ -81,9 +95,9 @@ class HomeStoryWidget extends StatelessWidget {
 
   Widget gradientContainer(MainController mainController) {
     return AnimatedContainer(
-      width: mainController.isExpanded(index) ? 140 : 100,
-      height: mainController.isExpanded(index) ? 208 : 150,
-      duration: const Duration(seconds: 1),
+      width: mainController.isStoryImgExpanded(index) ? 140 : 100,
+      height: mainController.isStoryImgExpanded(index) ? 208 : 150,
+      duration: const Duration(milliseconds: 0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.bottomCenter,
@@ -109,10 +123,18 @@ class HomeStoryWidget extends StatelessWidget {
     );
   }
 
-  Widget profileStoryImg() {
+  Widget profileStoryImg(MainController mainController) {
     return Container(
-      width: 35,
-      height: 35,
+      width: mainController.isProfileImgExpanded(index)
+          ? 100
+          : mainController.isStoryImgExpanded(index)
+              ? 50
+              : 35,
+      height: mainController.isProfileImgExpanded(index)
+          ? 100
+          : mainController.isStoryImgExpanded(index)
+              ? 50
+              : 35,
       decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
