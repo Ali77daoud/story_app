@@ -7,7 +7,7 @@ class StoryGetXController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-
     storyController.dispose();
+    print('stroy closed');
   }
 }

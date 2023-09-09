@@ -33,11 +33,10 @@ class _VideoThumbnailWidgetState extends State<VideoThumbnailWidget> {
               ? memoryImgBox.write(widget.videoPath, snapshot.data!)
               : null;
           return Container(
-            width: 75,
-            height: 75,
+            width: 100,
+            height: 150,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(20),
               image: DecorationImage(
                 image: MemoryImage(snapshot.data!),
                 fit: BoxFit.cover,
@@ -46,14 +45,15 @@ class _VideoThumbnailWidgetState extends State<VideoThumbnailWidget> {
           );
         } else {
           return Container(
-              width: 75,
-              height: 75,
+              width: 100,
+              height: 150,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(20),
               ),
-              child:
-                  const CircularProgressIndicator()); // or any other loading indicator
+              child: const Center(
+                  child: CircularProgressIndicator(
+                color: Colors.grey,
+              ))); // or any other loading indicator
         }
       },
     );
@@ -65,8 +65,9 @@ class _VideoThumbnailWidgetState extends State<VideoThumbnailWidget> {
         ? await VideoThumbnail.thumbnailData(
             video: videoPath,
             imageFormat: ImageFormat.JPEG,
-            maxHeight: 100, // Adjust as needed
-            quality: 25, // Adjust as needed
+            // maxHeight: 150,
+            // maxWidth: 100, // Adjust as needed
+            quality: 50, // Adjust as needed
           )
         : Uint8List.fromList(data.cast<int>());
     return uint8list;
