@@ -13,10 +13,17 @@ dependencies:
   flutter:
     sdk: flutter
   story_view:
-  get:
   get_storage:
   cached_network_image:
   video_thumbnail:
+  go_router:
+  flutter_bloc:
+  bloc: 
+  get_it:
+  equatable:
+  dartz:
+  auto_size_text:
+  shared_preferences:
 
 
  

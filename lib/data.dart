@@ -1,4 +1,4 @@
-import 'package:story_view_app/models/story_model.dart';
+import 'features/story/data/models/story_model.dart';
 
 final List<Story> stories = [
   Story(
@@ -30,10 +30,10 @@ final List<Story> stories = [
     media: MediaType.video,
     duration: const Duration(seconds: 9),
   ),
-  Story(
-    url:
-        'https://mazwai.com/videvo_files/video/free/2014-11/small_watermarked/matt_devir--one_minute_drive_preview.webm',
-    media: MediaType.video,
-    duration: const Duration(seconds: 55),
-  ),
+  // Story(
+  //   url:
+  //       'https://mazwai.com/videvo_files/video/free/2014-11/small_watermarked/matt_devir--one_minute_drive_preview.webm',
+  //   media: MediaType.video,
+  //   duration: const Duration(seconds: 55),
+  // ),
 ];
