@@ -1,5 +1,11 @@
 import 'package:get_it/get_it.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:story_view_app/features/story/data/data_sources/story_remote_datasource.dart';
+import 'package:story_view_app/features/story/data/repositories/story_repositories_imp.dart';
+import 'package:story_view_app/features/story/domain/repositories/story_repository.dart';
+import 'package:story_view_app/features/story/domain/usecases/get_user_stories_data_usecase.dart';
 import 'package:story_view_app/features/story/presentation/controllers/main_cubit/main_cubit.dart';
+import 'core/network_info/network_info.dart';
 import 'features/story/presentation/controllers/story_cubit/story_cubit.dart';
 
 final sl = GetIt.instance;
@@ -25,24 +31,17 @@ Future<void> init() async {
   /// 2. story
   // bloc /////////////////////////////////////////////////
   sl.registerFactory(() => StoryCubit());
-  sl.registerFactory(() => MainCubit());
+  sl.registerFactory(() => MainCubit(getUserStoryDataUseCase: sl.call()));
   // useCase //////////////////////////////////////////////
-  // sl.registerLazySingleton(() => GetInstructorsDataUseCase(sl.call()));
-  // sl.registerLazySingleton(() => BookSessionUseCase(sl.call()));
-  // sl.registerLazySingleton(() => GetAllSessionsUseCase(sl.call()));
-  // sl.registerLazySingleton(() => DeleteSessionUseCase(sl.call()));
+  sl.registerLazySingleton(() => GetUserStoryDataUseCase(sl.call()));
   // // repository ///////////////////////////////////////////
-  // sl.registerLazySingleton<BookingRepository>(() => BookingRepositoryImpl(
-  //       bookingLocalDataSource: sl.call(),
-  //     ));
+  sl.registerLazySingleton<StoryRepository>(() => StoryRepositoryImpl(
+      networkInfo: sl.call(), storyRemoteDataSource: sl.call()));
   // // dataSource /////////////////////////////////////////////
-  // sl.registerLazySingleton<BookingLocalDataSource>(
-  //     () => BookingLocalDataSourceImpl(localDataBase: sl.call()));
+  sl.registerLazySingleton<StoryRemoteDataSource>(
+      () => StoryRemoteDataSourceImpWithHttp());
   // /////////////////////////////////////////////////////////
-  // /////////////////////////////////////////////////////////
-  // final sharedPreferences = await SharedPreferences.getInstance();
-  // sl.registerLazySingleton(() => sharedPreferences);
-
-  // sl.registerSingleton<AppRouter>(AppRouter());
-  // sl.registerSingleton<LocalDataBase>(LocalDataBase());
+  // /////External////////////////////////////////////////////////////
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl.call()));
+  sl.registerLazySingleton(() => InternetConnectionChecker());
 }

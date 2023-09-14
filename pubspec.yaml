@@ -24,6 +24,7 @@ dependencies:
   dartz:
   auto_size_text:
   shared_preferences:
+  internet_connection_checker:
 
 
  

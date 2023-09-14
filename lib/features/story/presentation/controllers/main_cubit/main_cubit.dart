@@ -1,9 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:story_view_app/core/errors/failures.dart';
+import 'package:story_view_app/features/story/domain/usecases/get_user_stories_data_usecase.dart';
+import '../../../../../core/constants/failure_messages.dart';
 import '../../../data/models/story_image_expanded_model.dart';
+import '../../../domain/entities/story_data_entity.dart';
 import 'main_state.dart';
 
 class MainCubit extends Cubit<MainState> {
-  MainCubit() : super(MainInitialState());
+  final GetUserStoryDataUseCase getUserStoryDataUseCase;
+
+  StoryDataEntity? userStoriesData;
+
+  MainCubit({required this.getUserStoryDataUseCase})
+      : super(MainInitialState());
 
   static MainCubit get(context) => BlocProvider.of(context);
 
@@ -145,6 +154,30 @@ class MainCubit extends Cubit<MainState> {
       } else {
         return false;
       }
+    }
+  }
+
+  void getUserStories() async {
+    emit(GetUserStoriesLoadingState());
+
+    final failureOrGetUserStories = await getUserStoryDataUseCase.call();
+
+    failureOrGetUserStories.fold((failure) {
+      emit(GetUserStoriesErrorState(error: mapFailureToMessage(failure)));
+    }, (getUserStories) {
+      userStoriesData = getUserStories;
+      emit(GetUserStoriesSuccessState(storyDataEntity: getUserStories));
+    });
+  }
+
+  String mapFailureToMessage(Failure failure) {
+    switch (failure.runtimeType) {
+      case ServerFailure:
+        return FailureMessages.serverFailureMessage;
+      case OfflineFailure:
+        return FailureMessages.offlineFailureMessage;
+      default:
+        return FailureMessages.unExpectedFailureMessage;
     }
   }
 }
