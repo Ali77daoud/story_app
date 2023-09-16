@@ -25,6 +25,9 @@ dependencies:
   auto_size_text:
   shared_preferences:
   internet_connection_checker:
+  http:
+  cloudinary_flutter: ^1.0.0
+  cloudinary_url_gen: ^1.0.0
 
 
  

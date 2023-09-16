@@ -73,6 +73,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  cloudinary_flutter:
+    dependency: "direct main"
+    description:
+      name: cloudinary_flutter
+      sha256: "145021e2a16a45901a49e35802f95debb4c34d25095654ea94e3c85220c6ab24"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  cloudinary_url_gen:
+    dependency: "direct main"
+    description:
+      name: cloudinary_url_gen
+      sha256: "8292155fa3818c1243a431c05ae178f83317ef3e92c0912b66d254ad8fd8fdad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   collection:
     dependency: transitive
     description:
@@ -81,6 +97,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.1"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      sha256: "0f08b14755d163f6e2134cb58222dd25ea2a2ee8a195e53983d57c075324d592"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
   crypto:
     dependency: transitive
     description:
@@ -233,7 +257,7 @@ packages:
     source: hosted
     version: "0.15.4"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
@@ -557,6 +581,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      sha256: "1722b2dcc462b4b2f3ee7d188dad008b6eb4c40bbd03a3de451d82c78bba9aad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.2"
   uuid:
     dependency: transitive
     description:

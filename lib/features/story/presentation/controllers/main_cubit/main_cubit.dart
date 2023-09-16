@@ -170,6 +170,10 @@ class MainCubit extends Cubit<MainState> {
     });
   }
 
+  void changeHomeToSuccessState() {
+    emit(GetUserStoriesSuccessState(storyDataEntity: userStoriesData!));
+  }
+
   String mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
       case ServerFailure:

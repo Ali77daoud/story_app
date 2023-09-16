@@ -7,6 +7,7 @@ import 'package:story_view_app/features/story/domain/usecases/get_user_stories_d
 import 'package:story_view_app/features/story/presentation/controllers/main_cubit/main_cubit.dart';
 import 'core/network_info/network_info.dart';
 import 'features/story/presentation/controllers/story_cubit/story_cubit.dart';
+import 'package:http/http.dart' as http;
 
 final sl = GetIt.instance;
 
@@ -39,9 +40,10 @@ Future<void> init() async {
       networkInfo: sl.call(), storyRemoteDataSource: sl.call()));
   // // dataSource /////////////////////////////////////////////
   sl.registerLazySingleton<StoryRemoteDataSource>(
-      () => StoryRemoteDataSourceImpWithHttp());
+      () => StoryRemoteDataSourceImpWithHttp(client: sl.call()));
   // /////////////////////////////////////////////////////////
   // /////External////////////////////////////////////////////////////
+  sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl.call()));
   sl.registerLazySingleton(() => InternetConnectionChecker());
 }

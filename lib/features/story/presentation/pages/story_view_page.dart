@@ -4,9 +4,6 @@ import 'package:story_view/widgets/story_view.dart';
 import 'package:story_view_app/features/story/presentation/controllers/story_cubit/story_cubit.dart';
 import 'package:story_view_app/features/story/presentation/controllers/story_cubit/story_state.dart';
 import 'package:story_view_app/injection_container.dart' as di;
-
-import '../../../../data.dart';
-import '../../data/models/story_model.dart';
 import '../controllers/main_cubit/main_cubit.dart';
 
 class StoryViewPage extends StatelessWidget {
@@ -15,6 +12,7 @@ class StoryViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mainCubit = MainCubit.get(context);
+
     return BlocProvider(
         create: (context) => di.sl<StoryCubit>(),
         child: Container(
@@ -22,6 +20,7 @@ class StoryViewPage extends StatelessWidget {
           child: SafeArea(
             child: WillPopScope(
               onWillPop: () async {
+                mainCubit.changeHomeToSuccessState();
                 return true;
               },
               child: Scaffold(body: BlocBuilder<StoryCubit, StoryState>(
@@ -31,16 +30,29 @@ class StoryViewPage extends StatelessWidget {
                   return StoryView(
                     controller: storyCubit.storyController,
                     storyItems: [
-                      for (int i = currentIndex; i < stories.length; i++)
-                        stories[i].media == MediaType.video
-                            ? StoryItem.pageVideo(stories[i].url,
-                                duration: stories[i].duration,
+                      for (int i = 0;
+                          i <
+                              mainCubit.userStoriesData!.data.data[currentIndex]
+                                  .stories.length;
+                          i++)
+                        mainCubit.userStoriesData!.data.data[currentIndex]
+                                    .stories[i].isVideo ==
+                                1
+                            ? StoryItem.pageVideo(
+                                mainCubit
+                                    .userStoriesData!
+                                    .data
+                                    .data[currentIndex]
+                                    .stories[i]
+                                    .fullVideoPath!,
+                                duration: const Duration(seconds: 5),
                                 controller: storyCubit.storyController)
                             : StoryItem.inlineImage(
                                 imageFit: BoxFit.contain,
-                                url: (stories[i].url),
+                                url: mainCubit.userStoriesData!.data
+                                    .data[currentIndex].stories[i].photoPath!,
                                 controller: storyCubit.storyController,
-                                duration: stories[i].duration),
+                                duration: const Duration(seconds: 5)),
                     ],
                     onStoryShow: (s) async {
                       await Future.delayed(const Duration(microseconds: 1));

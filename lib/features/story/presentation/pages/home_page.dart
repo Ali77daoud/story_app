@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:story_view_app/features/story/presentation/controllers/main_cubit/main_cubit.dart';
 
-import '../../../../data.dart';
+import 'package:story_view_app/features/story/presentation/controllers/main_cubit/main_cubit.dart';
 import '../../../../main.dart';
 import '../controllers/main_cubit/main_state.dart';
 import '../widgets/home_story_widget.dart';
 
-// import 'package:story_view_app/route/routes.dart';
-
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    MainCubit.get(context).getUserStories();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,99 +38,122 @@ class HomePage extends StatelessWidget {
               }
             },
             builder: (context, state) {
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10, right: 0, bottom: 10, top: 30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: SizedBox(
-                          height: 21,
-                          width: double.infinity,
-                          child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return buildIcon(icon: iconList[index]);
-                              },
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                    width:
-                                        index == iconList.length - 2 ? w1 : w2);
-                              },
-                              itemCount: iconList.length),
-                        ),
-                      ),
-                      /////////////////////
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      ////////////////////
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Row(
-                          children: [
-                            buildIcon(icon: 'assets/images/reels.png'),
-                            const SizedBox(
-                              width: 7,
-                            ),
-                            const Text(
-                              'Reels',
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
-                      /////////////////////
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      ////////////////////
-                      SizedBox(
-                        height: 218,
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: stories.length,
-                          separatorBuilder: (context, index) {
-                            return const SizedBox(
-                              width: 15,
-                            );
-                          },
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                  right: index == stories.length - 1 ? 10 : 0),
-                              child: HomeStoryWidget(
-                                mainCubit: mainCubit,
-                                mediaType: stories[index].media,
-                                url: stories[index].url,
-                                isShowed: mainCubit.isStoryShown[index],
-                                index: index,
-                                onTap: () {
-                                  mainCubit.addIsStoryImgExpanded(index);
-                                  print('/////////////////////////');
-                                  for (var element
-                                      in mainCubit.isStoryImgExpandedList) {
-                                    print(
-                                        'index:${element.index} isEX: ${element.isExpanded}');
-                                  }
-
-                                  // Get.toNamed(Routes.storyPage, arguments: [index]);
+              if (state is GetUserStoriesLoadingState) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is GetUserStoriesErrorState) {
+                return const Center(
+                    child: Text('Connection Or Server Failure'));
+              } else if (state is GetUserStoriesSuccessState ||
+                  state is StoryImgExpandedState ||
+                  state is ProfileImgExpandedState) {
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 0, bottom: 10, top: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: SizedBox(
+                            height: 21,
+                            width: double.infinity,
+                            child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return buildIcon(icon: iconList[index]);
                                 },
-                              ),
-                            );
-                          },
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                      width: index == iconList.length - 2
+                                          ? w1
+                                          : w2);
+                                },
+                                itemCount: iconList.length),
+                          ),
                         ),
-                      )
-                    ],
+                        /////////////////////
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        ////////////////////
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Row(
+                            children: [
+                              buildIcon(icon: 'assets/images/reels.png'),
+                              const SizedBox(
+                                width: 7,
+                              ),
+                              const Text(
+                                'Reels',
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black),
+                              ),
+                            ],
+                          ),
+                        ),
+                        /////////////////////
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ////////////////////
+                        SizedBox(
+                          height: 218,
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount:
+                                mainCubit.userStoriesData!.data.data.length,
+                            // stories.length,
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(
+                                width: 15,
+                              );
+                            },
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    right: index ==
+                                            mainCubit.userStoriesData!.data.data
+                                                    .length -
+                                                1
+                                        ? 10
+                                        : 0),
+                                child: HomeStoryWidget(
+                                  mainCubit: mainCubit,
+                                  isVideo: mainCubit.userStoriesData!.data
+                                      .data[index].stories[0].isVideo,
+                                  url: mainCubit.userStoriesData!.data
+                                              .data[index].stories[0].isVideo ==
+                                          1
+                                      ? mainCubit.userStoriesData!.data
+                                          .data[index].stories[0].fullVideoPath
+                                      : mainCubit.userStoriesData!.data
+                                          .data[index].stories[0].photoPath,
+                                  isShowed: mainCubit.isStoryShown[index],
+                                  index: index,
+                                  onTap: () {
+                                    mainCubit.addIsStoryImgExpanded(index);
+                                    print('/////////////////////////');
+                                    for (var element
+                                        in mainCubit.isStoryImgExpandedList) {
+                                      print(
+                                          'index:${element.index} isEX: ${element.isExpanded}');
+                                    }
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              );
+                );
+              }
+              return const Center(child: CircularProgressIndicator());
             },
           )),
     );

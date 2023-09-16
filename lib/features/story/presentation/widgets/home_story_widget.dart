@@ -2,11 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:story_view_app/features/story/presentation/controllers/main_cubit/main_cubit.dart';
 import 'package:story_view_app/features/story/presentation/widgets/thumbnail_widget.dart';
-import '../../data/models/story_model.dart';
 
 class HomeStoryWidget extends StatelessWidget {
-  final MediaType mediaType;
-  final String url;
+  final int isVideo;
+  final String? url;
   final Function() onTap;
   final bool isShowed;
   final MainCubit mainCubit;
@@ -14,7 +13,7 @@ class HomeStoryWidget extends StatelessWidget {
 
   const HomeStoryWidget({
     super.key,
-    required this.mediaType,
+    required this.isVideo,
     required this.url,
     required this.onTap,
     required this.isShowed,
@@ -32,9 +31,9 @@ class HomeStoryWidget extends StatelessWidget {
           children: [
             Align(
               alignment: Alignment.bottomRight,
-              child: mediaType == MediaType.video
+              child: isVideo == 1
                   ? VideoThumbnailWidget(
-                      videoPath: url,
+                      videoPath: url!,
                       mainCubit: mainCubit,
                       index: index,
                     )
@@ -82,7 +81,7 @@ class HomeStoryWidget extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: CachedNetworkImage(
-          imageUrl: url,
+          imageUrl: url!,
           fit: BoxFit.cover,
           progressIndicatorBuilder: (context, url, progress) {
             return const Center(
