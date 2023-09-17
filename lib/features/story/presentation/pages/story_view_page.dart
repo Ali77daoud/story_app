@@ -4,6 +4,7 @@ import 'package:story_view/widgets/story_view.dart';
 import 'package:story_view_app/features/story/presentation/controllers/story_cubit/story_cubit.dart';
 import 'package:story_view_app/features/story/presentation/controllers/story_cubit/story_state.dart';
 import 'package:story_view_app/injection_container.dart' as di;
+import '../../../../core/utils/cloudinary_func.dart';
 import '../controllers/main_cubit/main_cubit.dart';
 
 class StoryViewPage extends StatelessWidget {
@@ -30,27 +31,27 @@ class StoryViewPage extends StatelessWidget {
                   return StoryView(
                     controller: storyCubit.storyController,
                     storyItems: [
-                      for (int i = 0;
-                          i <
-                              mainCubit.userStoriesData!.data.data[currentIndex]
-                                  .stories.length;
-                          i++)
-                        mainCubit.userStoriesData!.data.data[currentIndex]
-                                    .stories[i].isVideo ==
-                                1
+                      for (int i = 0; i < mainCubit.userStoriesData!.data.data[currentIndex].stories.length; i++)
+                        mainCubit.userStoriesData!.data.data[currentIndex].stories[i].isVideo == 1
                             ? StoryItem.pageVideo(
-                                mainCubit
-                                    .userStoriesData!
-                                    .data
-                                    .data[currentIndex]
-                                    .stories[i]
-                                    .fullVideoPath!,
+                                CloudinaryFunc.videoCloudinaryTransform(
+                                    CloudinaryFunc.extractPublicID(mainCubit
+                                        .userStoriesData!
+                                        .data
+                                        .data[currentIndex]
+                                        .stories[i]
+                                        .fullVideoPath!)),
                                 duration: const Duration(seconds: 5),
                                 controller: storyCubit.storyController)
                             : StoryItem.inlineImage(
                                 imageFit: BoxFit.contain,
-                                url: mainCubit.userStoriesData!.data
-                                    .data[currentIndex].stories[i].photoPath!,
+                                url: CloudinaryFunc.imageCloudinaryTransform(
+                                    CloudinaryFunc.extractPublicID(mainCubit
+                                        .userStoriesData!
+                                        .data
+                                        .data[currentIndex]
+                                        .stories[i]
+                                        .photoPath!)),
                                 controller: storyCubit.storyController,
                                 duration: const Duration(seconds: 5)),
                     ],

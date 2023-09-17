@@ -5,6 +5,7 @@ import 'package:story_view_app/features/story/data/repositories/story_repositori
 import 'package:story_view_app/features/story/domain/repositories/story_repository.dart';
 import 'package:story_view_app/features/story/domain/usecases/get_user_stories_data_usecase.dart';
 import 'package:story_view_app/features/story/presentation/controllers/main_cubit/main_cubit.dart';
+import 'package:story_view_app/features/story/presentation/controllers/upload_story_cubit/upload_story_cubit.dart';
 import 'core/network_info/network_info.dart';
 import 'features/story/presentation/controllers/story_cubit/story_cubit.dart';
 import 'package:http/http.dart' as http;
@@ -33,6 +34,7 @@ Future<void> init() async {
   // bloc /////////////////////////////////////////////////
   sl.registerFactory(() => StoryCubit());
   sl.registerFactory(() => MainCubit(getUserStoryDataUseCase: sl.call()));
+  sl.registerFactory(() => UploadStoryCubit());
   // useCase //////////////////////////////////////////////
   sl.registerLazySingleton(() => GetUserStoryDataUseCase(sl.call()));
   // // repository ///////////////////////////////////////////

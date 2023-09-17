@@ -7,7 +7,7 @@ abstract class StoryState extends Equatable {
   List<Object> get props => [];
 }
 
-class BookingInitialState extends StoryState {}
+class StoryInitialState extends StoryState {}
 
 // class ChooseValueFromDropDownState extends BookingState {
 //   final DropDownType type;

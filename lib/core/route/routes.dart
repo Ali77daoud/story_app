@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import '../../features/story/presentation/pages/home_page.dart';
 import '../../features/story/presentation/pages/story_view_page.dart';
+import '../../features/story/presentation/pages/upload_story_page.dart';
 
 // GoRouter configuration
 final router = GoRouter(
@@ -16,6 +17,11 @@ final router = GoRouter(
       name: 'story',
       path: '/story',
       builder: (context, state) => StoryViewPage(),
+    ),
+    GoRoute(
+      name: 'uploadStory',
+      path: '/uploadStory',
+      builder: (context, state) => UploadStoryPage(),
     ),
   ],
 );

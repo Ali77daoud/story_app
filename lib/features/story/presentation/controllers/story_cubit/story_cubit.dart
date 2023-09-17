@@ -13,7 +13,7 @@ class StoryCubit extends Cubit<StoryState> {
     return super.close();
   }
 
-  StoryCubit() : super(BookingInitialState());
+  StoryCubit() : super(StoryInitialState());
 
   static StoryCubit get(context) => BlocProvider.of(context);
 

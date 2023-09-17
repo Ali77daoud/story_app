@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cloudinary_flutter/cloudinary_context.dart';
 import 'package:cloudinary_url_gen/cloudinary.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,15 @@ import 'core/bloc_observer.dart';
 import 'core/route/routes.dart';
 import 'features/story/presentation/controllers/main_cubit/main_cubit.dart';
 import 'injection_container.dart' as di;
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +29,8 @@ void main() async {
 ////////////////////////////////////////////////////////////////////
   CloudinaryContext.cloudinary =
       Cloudinary.fromCloudName(cloudName: 'djooohujg');
+
+  HttpOverrides.global = MyHttpOverrides();
 
   runApp(const MyApp());
 }

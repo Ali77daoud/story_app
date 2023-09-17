@@ -147,7 +147,8 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                           ),
-                        )
+                        ),
+                        addStoryButton(context),
                       ],
                     ),
                   ),
@@ -156,6 +157,29 @@ class _HomePageState extends State<HomePage> {
               return const Center(child: CircularProgressIndicator());
             },
           )),
+    );
+  }
+
+  Widget addStoryButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+      child: SizedBox(
+        width: double.infinity,
+        height: 40,
+        child: ElevatedButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.grey)),
+          child: const Text(
+            'Add Story',
+            style: TextStyle(fontSize: 13),
+          ),
+          onPressed: () {
+            context.pushNamed(
+              'uploadStory',
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -243,29 +267,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-// import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
-
-// class HomePage extends StatelessWidget {
-//   const HomePage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Column(
-//         children: [
-//           InkWell(
-//             onTap: () {
-//               context.goNamed('story');
-//             },
-//             child: Container(
-//               width: 50,
-//               height: 60,
-//               color: Colors.red,
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
