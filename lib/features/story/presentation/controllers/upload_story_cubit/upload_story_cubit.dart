@@ -28,7 +28,7 @@ class UploadStoryCubit extends Cubit<UploadStoryState> {
   File? galleryFile;
   final picker = ImagePicker();
   VideoPlayerController? videoController;
-  // bool isLoading = false;
+  int isVideo = 0;
 
   void showPicker({
     required BuildContext context,
@@ -86,6 +86,7 @@ class UploadStoryCubit extends Cubit<UploadStoryState> {
         videoController!.initialize().then((value) {
           if (videoController!.value.duration.inSeconds <= 50) {
             galleryFile = File(pickedFile.path);
+            isVideo = 1;
             emit(const LoadingState(isLoading: false));
             emit(ChooseVideoSuccessState(pickedFile: pickedFile.path));
           } else {
@@ -96,6 +97,7 @@ class UploadStoryCubit extends Cubit<UploadStoryState> {
       } else {
         print('Camera Video Selected');
         galleryFile = File(pickedFile!.path);
+        isVideo = 1;
         emit(const LoadingState(isLoading: false));
         emit(ChooseVideoSuccessState(pickedFile: pickedFile.path));
       }
@@ -116,6 +118,7 @@ class UploadStoryCubit extends Cubit<UploadStoryState> {
 
     if (xfilePick != null) {
       galleryFile = File(pickedFile!.path);
+      isVideo = 0;
       emit(const LoadingState(isLoading: false));
       emit(ChooseImageSuccessState(pickedFile: pickedFile.path));
     } else {
@@ -128,7 +131,7 @@ class UploadStoryCubit extends Cubit<UploadStoryState> {
     emit(const LoadingState(isLoading: true));
     if (galleryFile != null) {
       final failureOrGetUserStories = await uploadUserStoryUseCase.call(
-          mediaFile: galleryFile!, isVideo: 0);
+          mediaFile: galleryFile!, isVideo: isVideo);
 
       failureOrGetUserStories.fold((failure) {
         emit(UploadUserStoryErrorState(

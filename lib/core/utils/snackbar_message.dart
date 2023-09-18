@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SnackBarMessage {
-  void showSnackBar(
+  static void showSnackBar(
       {required String message,
       required Color backgroundColor,
       required BuildContext context}) {
@@ -12,7 +12,7 @@ class SnackBarMessage {
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: backgroundColor,
-        duration: const Duration(seconds: 2),
+        duration: const Duration(seconds: 4),
       ),
     );
   }

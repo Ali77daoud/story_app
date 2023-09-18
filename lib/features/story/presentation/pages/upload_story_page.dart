@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:story_view_app/core/utils/snackbar_message.dart';
 import 'package:story_view_app/features/story/presentation/widgets/circle_indecator_screen.dart';
 import '../controllers/main_cubit/main_cubit.dart';
 import '../controllers/upload_story_cubit/upload_story_cubit.dart';
@@ -31,14 +33,33 @@ class UploadStoryPage extends StatelessWidget {
                   body: BlocConsumer<UploadStoryCubit, UploadStoryState>(
                     listener: (context, state) {
                       if (state is NoMediaFileSelectedState) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Nothing is selected')));
+                        SnackBarMessage.showSnackBar(
+                            message: 'Nothing is selected',
+                            backgroundColor: Colors.red,
+                            context: context);
                       }
                       if (state is SelectedVideoDurationFailedState) {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text(
-                                'Selected video duration should be less than 50 seconds.')));
+                        SnackBarMessage.showSnackBar(
+                            message:
+                                'Selected video duration should be less than 50 seconds',
+                            backgroundColor: Colors.red,
+                            context: context);
+                      }
+                      if (state is UploadUserStoryErrorState) {
+                        SnackBarMessage.showSnackBar(
+                            message: state.error,
+                            backgroundColor: Colors.red,
+                            context: context);
+                      }
+                      if (state is UploadUserStorySuccessState) {
+                        SnackBarMessage.showSnackBar(
+                            message: 'The story has been uploaded successfuly',
+                            backgroundColor: Colors.green,
+                            context: context);
+
+                        mainCubit.getUserStories();
+
+                        context.goNamed('home');
                       }
                     },
                     builder: (context, state) {
