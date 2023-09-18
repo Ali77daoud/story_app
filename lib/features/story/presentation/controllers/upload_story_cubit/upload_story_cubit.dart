@@ -6,7 +6,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:story_view_app/features/story/presentation/controllers/upload_story_cubit/upload_story_state.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../../core/utils/failure_handling.dart';
+import '../../../domain/usecases/upload_user_story_usecase.dart';
+
 class UploadStoryCubit extends Cubit<UploadStoryState> {
+  final UploadUserStoryUseCase uploadUserStoryUseCase;
   @override
   Future<void> close() {
     // dispose
@@ -16,7 +20,8 @@ class UploadStoryCubit extends Cubit<UploadStoryState> {
     return super.close();
   }
 
-  UploadStoryCubit() : super(UploadStoryInitialState());
+  UploadStoryCubit({required this.uploadUserStoryUseCase})
+      : super(UploadStoryInitialState());
 
   static UploadStoryCubit get(context) => BlocProvider.of(context);
 
@@ -64,11 +69,11 @@ class UploadStoryCubit extends Cubit<UploadStoryState> {
 
   Future getVideo(ImageSource imgSource, BuildContext context) async {
     print('1');
-    emit(const CheckVideoDurationLoadingState(isLoading: true));
+    emit(const LoadingState(isLoading: true));
     final pickedFile = await picker.pickVideo(
         source: imgSource,
         preferredCameraDevice: CameraDevice.front,
-        maxDuration: const Duration(seconds: 5));
+        maxDuration: const Duration(seconds: 50));
 
     XFile? xfilePick = pickedFile;
 
@@ -81,26 +86,27 @@ class UploadStoryCubit extends Cubit<UploadStoryState> {
         videoController!.initialize().then((value) {
           if (videoController!.value.duration.inSeconds <= 50) {
             galleryFile = File(pickedFile.path);
-            emit(const CheckVideoDurationLoadingState(isLoading: false));
+            emit(const LoadingState(isLoading: false));
             emit(ChooseVideoSuccessState(pickedFile: pickedFile.path));
           } else {
-            emit(const CheckVideoDurationLoadingState(isLoading: false));
+            emit(const LoadingState(isLoading: false));
             emit(const SelectedVideoDurationFailedState());
           }
         });
       } else {
         print('Camera Video Selected');
         galleryFile = File(pickedFile!.path);
-        emit(const CheckVideoDurationLoadingState(isLoading: false));
+        emit(const LoadingState(isLoading: false));
         emit(ChooseVideoSuccessState(pickedFile: pickedFile.path));
       }
     } else {
-      emit(const CheckVideoDurationLoadingState(isLoading: false));
-      emit(const NoVideoSelectedState());
+      emit(const LoadingState(isLoading: false));
+      emit(const NoMediaFileSelectedState());
     }
   }
 
   Future getImage(ImageSource img, BuildContext context) async {
+    emit(const LoadingState(isLoading: true));
     final pickedFile = await picker.pickImage(
       source: img,
       preferredCameraDevice: CameraDevice.front,
@@ -110,9 +116,31 @@ class UploadStoryCubit extends Cubit<UploadStoryState> {
 
     if (xfilePick != null) {
       galleryFile = File(pickedFile!.path);
+      emit(const LoadingState(isLoading: false));
       emit(ChooseImageSuccessState(pickedFile: pickedFile.path));
     } else {
-      emit(const NoImageSelectedState());
+      emit(const LoadingState(isLoading: false));
+      emit(const NoMediaFileSelectedState());
+    }
+  }
+
+  void uploadUserStory() async {
+    emit(const LoadingState(isLoading: true));
+    if (galleryFile != null) {
+      final failureOrGetUserStories = await uploadUserStoryUseCase.call(
+          mediaFile: galleryFile!, isVideo: 0);
+
+      failureOrGetUserStories.fold((failure) {
+        emit(UploadUserStoryErrorState(
+            error: FailureHandling.mapFailureToMessage(failure)));
+        emit(const LoadingState(isLoading: false));
+      }, (unit) {
+        emit(const UploadUserStorySuccessState());
+        emit(const LoadingState(isLoading: false));
+      });
+    } else {
+      emit(const LoadingState(isLoading: false));
+      emit(const NoMediaFileSelectedState());
     }
   }
 }

@@ -30,12 +30,7 @@ class UploadStoryPage extends StatelessWidget {
                   ),
                   body: BlocConsumer<UploadStoryCubit, UploadStoryState>(
                     listener: (context, state) {
-                      if (state is NoImageSelectedState) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Nothing is selected')));
-                      }
-                      if (state is NoVideoSelectedState) {
+                      if (state is NoMediaFileSelectedState) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text('Nothing is selected')));
@@ -126,16 +121,16 @@ class UploadStoryPage extends StatelessWidget {
                                         style: TextStyle(
                                             fontSize: 13, color: Colors.white),
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        uploadStoryCubit.uploadUserStory();
+                                      },
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                          state ==
-                                  const CheckVideoDurationLoadingState(
-                                      isLoading: true)
+                          state == const LoadingState(isLoading: true)
                               ? const CircleIndicatorScreen()
                               : Container()
                         ],

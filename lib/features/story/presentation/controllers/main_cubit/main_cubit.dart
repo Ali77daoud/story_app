@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:story_view_app/core/errors/failures.dart';
 import 'package:story_view_app/features/story/domain/usecases/get_user_stories_data_usecase.dart';
-import '../../../../../core/constants/failure_messages.dart';
+import '../../../../../core/utils/failure_handling.dart';
 import '../../../data/models/story_image_expanded_model.dart';
 import '../../../domain/entities/story_data_entity.dart';
 import 'main_state.dart';
@@ -55,19 +54,11 @@ class MainCubit extends Cubit<MainState> {
           for (var element in isStoryImgExpandedList) {
             element.isExpanded = false;
           }
-          // isStoryImgExpandedList
-          //     .firstWhere((element) => element.index == index)
-          //     .isExpanded = false;
-          ////////////
-          // bool isProfileValueInList =
-          //     isProfileImgExpandedList.any((element) => element.index == index);
+
           if (isProfileImgExpandedList.isNotEmpty) {
             for (var element in isProfileImgExpandedList) {
               element.isExpanded = false;
             }
-            // isProfileImgExpandedList
-            //     .firstWhere((element) => element.index == index)
-            //     .isExpanded = false;
           }
           /////////////////
           // Get.toNamed(Routes.storyPage, arguments: [index]);
@@ -163,7 +154,8 @@ class MainCubit extends Cubit<MainState> {
     final failureOrGetUserStories = await getUserStoryDataUseCase.call();
 
     failureOrGetUserStories.fold((failure) {
-      emit(GetUserStoriesErrorState(error: mapFailureToMessage(failure)));
+      emit(GetUserStoriesErrorState(
+          error: FailureHandling.mapFailureToMessage(failure)));
     }, (getUserStories) {
       userStoriesData = getUserStories;
       emit(GetUserStoriesSuccessState(storyDataEntity: getUserStories));
@@ -172,16 +164,5 @@ class MainCubit extends Cubit<MainState> {
 
   void changeHomeToSuccessState() {
     emit(GetUserStoriesSuccessState(storyDataEntity: userStoriesData!));
-  }
-
-  String mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case ServerFailure:
-        return FailureMessages.serverFailureMessage;
-      case OfflineFailure:
-        return FailureMessages.offlineFailureMessage;
-      default:
-        return FailureMessages.unExpectedFailureMessage;
-    }
   }
 }

@@ -11,9 +11,9 @@ class UploadStoryInitialState extends UploadStoryState {}
 
 //video
 
-class CheckVideoDurationLoadingState extends UploadStoryState {
+class LoadingState extends UploadStoryState {
   final bool isLoading;
-  const CheckVideoDurationLoadingState({required this.isLoading});
+  const LoadingState({required this.isLoading});
   @override
   List<Object> get props => [isLoading];
 }
@@ -31,11 +31,11 @@ class ChooseVideoSuccessState extends UploadStoryState {
   List<Object> get props => [pickedFile];
 }
 
-class NoVideoSelectedState extends UploadStoryState {
-  const NoVideoSelectedState();
-  @override
-  List<Object> get props => [];
-}
+// class NoVideoSelectedState extends UploadStoryState {
+//   const NoVideoSelectedState();
+//   @override
+//   List<Object> get props => [];
+// }
 //image
 
 class ChooseImageSuccessState extends UploadStoryState {
@@ -45,8 +45,31 @@ class ChooseImageSuccessState extends UploadStoryState {
   List<Object> get props => [pickedFile];
 }
 
-class NoImageSelectedState extends UploadStoryState {
-  const NoImageSelectedState();
+// class NoImageSelectedState extends UploadStoryState {
+//   const NoImageSelectedState();
+//   @override
+//   List<Object> get props => [];
+// }
+
+class UploadUserStorySuccessState extends UploadStoryState {
+  const UploadUserStorySuccessState();
+
+  @override
+  List<Object> get props => [];
+}
+
+/////
+class UploadUserStoryErrorState extends UploadStoryState {
+  final String error;
+
+  const UploadUserStoryErrorState({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
+class NoMediaFileSelectedState extends UploadStoryState {
+  const NoMediaFileSelectedState();
   @override
   List<Object> get props => [];
 }

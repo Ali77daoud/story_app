@@ -7,6 +7,7 @@ import 'package:story_view_app/features/story/domain/usecases/get_user_stories_d
 import 'package:story_view_app/features/story/presentation/controllers/main_cubit/main_cubit.dart';
 import 'package:story_view_app/features/story/presentation/controllers/upload_story_cubit/upload_story_cubit.dart';
 import 'core/network_info/network_info.dart';
+import 'features/story/domain/usecases/upload_user_story_usecase.dart';
 import 'features/story/presentation/controllers/story_cubit/story_cubit.dart';
 import 'package:http/http.dart' as http;
 
@@ -34,9 +35,10 @@ Future<void> init() async {
   // bloc /////////////////////////////////////////////////
   sl.registerFactory(() => StoryCubit());
   sl.registerFactory(() => MainCubit(getUserStoryDataUseCase: sl.call()));
-  sl.registerFactory(() => UploadStoryCubit());
+  sl.registerFactory(() => UploadStoryCubit(uploadUserStoryUseCase: sl.call()));
   // useCase //////////////////////////////////////////////
   sl.registerLazySingleton(() => GetUserStoryDataUseCase(sl.call()));
+  sl.registerLazySingleton(() => UploadUserStoryUseCase(sl.call()));
   // // repository ///////////////////////////////////////////
   sl.registerLazySingleton<StoryRepository>(() => StoryRepositoryImpl(
       networkInfo: sl.call(), storyRemoteDataSource: sl.call()));
